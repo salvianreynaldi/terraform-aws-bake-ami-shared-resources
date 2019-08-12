@@ -5,6 +5,8 @@ module "codebuild_role" {
   role_description           = "Service Role for CodeBuild Bake AMI"
   role_force_detach_policies = "true"
   role_max_session_duration  = "43200"
+  product_domain             = "${var.product_domain}"
+  environment                = "management"
 
   aws_service = "codebuild.amazonaws.com"
 }
@@ -34,6 +36,8 @@ module "codepipeline_role" {
   role_description           = "Service Role for CodePipeline Bake AMI"
   role_force_detach_policies = "true"
   role_max_session_duration  = "43200"
+  product_domain             = "${var.product_domain}"
+  environment                = "management"
 
   aws_service = "codepipeline.amazonaws.com"
 }
@@ -59,8 +63,10 @@ resource "aws_iam_role_policy" "codepipeline_lambda" {
 module "template_instance_role" {
   source = "github.com/traveloka/terraform-aws-iam-role.git//modules/instance?ref=v1.0.2"
 
-  service_name = "${var.product_domain}"
-  cluster_role = "template"
+  service_name   = "${var.product_domain}"
+  product_domain = "${var.product_domain}"
+  cluster_role   = "template"
+  environment    = "management"
 }
 
 module "template_sg_name" {
@@ -286,6 +292,8 @@ module "events_role" {
   role_description           = "Service Role to trigger ${var.product_domain} CodePipeline pipelines"
   role_force_detach_policies = true
   role_max_session_duration  = 43200
+  product_domain             = "${var.product_domain}"
+  environment                = "management"
 
   aws_service = "events.amazonaws.com"
 }
