@@ -191,7 +191,31 @@ resource "aws_s3_bucket" "application_binary" {
     enabled = "true"
 
     expiration {
-      days = "365"
+      days = "${var.appbin_expiration_days}"
+    }
+
+    noncurrent_version_expiration {
+      days = "${var.appbin_expiration_days}"
+    }
+
+    transition {
+      days          = "${var.appbin_standard_ia_transition_days}"
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = "${var.appbin_deep_archive_transition_days}"
+      storage_class = "DEEP_ARCHIVE"
+    }
+
+    noncurrent_version_transition {
+      days          = "${var.appbin_standard_ia_transition_days}"
+      storage_class = "STANDARD_IA"
+    }
+
+    noncurrent_version_transition {
+      days          = "${var.appbin_deep_archive_transition_days}"
+      storage_class = "DEEP_ARCHIVE"
     }
 
     abort_incomplete_multipart_upload_days = "1"
